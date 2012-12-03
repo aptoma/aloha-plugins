@@ -1,0 +1,39 @@
+.aloha-plugin-htmlsource-dialog {
+    font-size: 12px;
+}
+
+.aloha-plugin-htmlsource.ui-dialog-content {
+	padding: 0;
+    background: #fff;
+	overflow: hidden;
+}
+
+.aloha-plugin-htmlsource-container {
+	position: absolute;
+	right: 0;
+	left: 0;
+	bottom: 2px;
+	top: 0;
+	padding: 2px 0 2px 2px;
+}
+
+.aloha-plugin-htmlsource textarea {
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 12px;
+	outline: none;
+	border: none;
+	resize: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.aloha .ui-state-default .aloha-icon.aloha-plugin-htmlsource-button {
+	background-image: url(../img/button.png);
+    margin-top: -9px;
+}
+
+.aloha-plugin-htmlsource-dialog label[for="wraped"] {
+	font-size: 12px;
+}

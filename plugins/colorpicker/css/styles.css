@@ -1,0 +1,18 @@
+.cp-plugin-color-preview {
+    position: absolute;
+	height: 3px;
+    top: 17px;
+    left: 3px;
+    width: 16px;
+}
+
+.cp-plugin-icon {
+    background-image: url(../img/sprites.png) !important;
+    background-repeat: no-repeat !important;
+    margin-left: -6px !important;
+    width: 12px !important;
+}
+
+.cp-plugin-icon.cp-plugin-icon-foregroundColor {
+    background-position: -12px 0;
+}

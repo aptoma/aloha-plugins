@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+	<title>Example</title>
+	<link href="http://cdn.aloha-editor.org/latest/css/aloha.css" type="text/css" rel="stylesheet" />
+	<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.all.css" type="text/css" rel="stylesheet" />
+	<style>
+		body {
+			font-size: 12px;
+		}
+		#content {
+			font-size: 16px;
+		}
+	</style>
+	<script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/vendor/jquery-1.7.1.js"></script>
+	<script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/require.js"></script>
+	<script>
+		var Aloha = {
+			settings: {
+				bundles: {
+					'self': location.href.replace(/\/?index.html$/, '')
+				},
+				toolbar: {
+					tabs: [
+						{
+							label: 'Source',
+							showOn: {
+								scope: 'Aloha.continuoustext'
+							},
+							components: [['htmlsource']]
+						},
+						{
+							label: 'tab.format.label'
+						},
+					]
+				}
+			}
+		};
+	</script>
+	<script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/aloha.js" data-aloha-plugins="common/ui, common/format, common/image, self/htmlsource"></script>
+	<script type="text/javascript">
+		Aloha.ready(function() {
+			$('#content').aloha();
+		});
+	</script>
+</head>
+<body>
+	<div id="content">
+		<p id="bar">Recent trends <span class="foo">are popularizing <b>the</b> term elsewhere</span> in the United States. Popular entertainer, Broadway star and Hollywood actress Bette Midler, born in Honolulu, uses the greeting frequently in national appearances.</p>
+		<ul>
+			<li>Arguably the most famous historical Hawaiian song, "Aloha ʻOe" was written by the last queen of Hawaii, Liliʻuokalani.</li>
+			<li>The term inspired the name of the ALOHA Protocol introduced in the 1970s by the University of Hawaii.</li>
+			<li>In Hawaii someone can be said to have or show aloha in the way they treat others; whether family, friend, neighbor or stranger.</li>
+		</ul>
+		<a href="http://veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryvery-long-url.com">A very long URL (wordwrap test)</a>
+	</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+.aloha-plugin-textresize-button.ui-button {
+    -moz-border-radius: 2px !important;
+    -khtml-border-radius: 2px !important;
+    -webkit-border-radius: 2px !important;
+    border-radius: 2px !important;
+}
+
+ .aloha-plugin-textresize-button.ui-button.ui-state-default {
+    background: transparent;
+ }
+ .aloha-plugin-textresize-button.ui-button.ui-state-hover {
+    background: #fff;
+ }
+
+.aloha-plugin-textresize-button input {
+    width: 40px;
+    height: 24px;
+    padding: 0 4px;
+    margin: 0;
+    font-size: 10px;
+}
+
+.aloha-plugin-textresize-button input:focus {
+    outline: none;
+}
+
+.aloha-plugin-textresize-button .ui-widget-content {
+    min-width: 0 !important;
+}
+
+.aloha-plugin-textresize-button .ui-button-text {
+    padding: 0 !important;
+}
+
+.aloha-plugin-textresize-button .ui-spinner-button {
+    position: absolute !important;
+    width: 16px !important;
+    height: 50% !important;
+    font-size: .5em !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: center !important;
+    position: absolute !important;
+    cursor: default !important;
+    display: block !important;
+    overflow: hidden !important;
+    right: 0 !important;
+    border: 0 !important;
+}

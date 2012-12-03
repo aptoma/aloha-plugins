@@ -1,0 +1,29 @@
+.aloha-plugin-font .ui-menu-item {
+    font-size: 13px;
+}
+
+.aloha-plugin-font .ui-button-text {
+    padding-left: 1px !important;
+    padding-right: 12px !important;
+    overflow: hidden;
+    font-size: 10px !important;
+    max-width: 60px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.aloha-plugin-font .ui-button-icon-primary.ui-icon.aloha-ui-inline-icon-container {
+    background-image: none;
+}
+
+.aloha-plugin-font .ui-button-icon-secondary {
+    width: 12px !important;
+}
+
+.aloha-plugin-font .aloha-ui-menubutton-menu .aloha-ui-inline-icon {
+    margin-bottom: 0;
+}
+
+.aloha-plugin-font .aloha-ui-menubutton-menu {
+    z-index: 1;
+}

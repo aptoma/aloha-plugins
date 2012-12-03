@@ -1,0 +1,24 @@
+.aloha-plugin-styles {
+    display: inline-block;
+    float: none;
+}
+
+.aloha-plugin-styles .aloha-ui-inline-icon-container {
+    margin-top: -9px;
+}
+
+.aloha-plugin-styles .aloha-ui-menubutton-menu .aloha-ui-inline-icon {
+    margin-bottom: 0;
+}
+
+.aloha-plugin-styles .aloha-ui-menubutton-menu {
+    z-index: 1;
+}
+
+.aloha-plugin-styles .ui-menu li.ui-state-disabled {
+    padding: 0;
+}
+
+.aloha-plugin-styles .ui-button-icon-secondary {
+    width: 12px !important;
+}
