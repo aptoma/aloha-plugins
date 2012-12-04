@@ -188,7 +188,7 @@ define(function (require) {
 				self.createSpinner(
 					key,
 					self.config[key],
-					self['change' + key.substr(0,1).toUpperCase() + key.substr(1)]
+					self['change' + key.substr(0, 1).toUpperCase() + key.substr(1)]
 				);
 			});
 
@@ -207,20 +207,18 @@ define(function (require) {
 				}
 			});
 
-			Aloha.bind('aloha-editable-activated', function (e, params) {
-				if (Aloha.activeEditable) {
-					$.each(self.hotKey, function (fn, keyCombo) {
-						params.editable.obj.bind('keydown', keyCombo, function (e) {
-							filterPubSubEvents(true);
-							self[fn](e);
-							return false;
-						});
-						params.editable.obj.bind('keyup', keyCombo, function (e) {
-							filterPubSubEvents(false);
-							return false;
-						});
+			Aloha.bind('aloha-editable-created', function (e, editable) {
+				$.each(self.hotKey, function (fn, keyCombo) {
+					editable.obj.bind('keydown', keyCombo, function (e) {
+						filterPubSubEvents(true);
+						self[fn](e);
+						return false;
 					});
-				}
+
+					editable.obj.bind('keyup', keyCombo, function (e) {
+						filterPubSubEvents(false);
+					});
+				});
 			});
 		},
 
