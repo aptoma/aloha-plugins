@@ -11,7 +11,7 @@ define(function (require) {
 		Dialog = require('ui/dialog'),
 		plugin = require('aloha/plugin'),
 		htmlBeautifier = require('./htmlbeautifier'),
-		codeMirror = require('./codemirror'),
+		CodeMirror = require('./codemirror'),
 		$ = require('jquery');
 
 	/**
@@ -68,9 +68,26 @@ define(function (require) {
 		$dialog: null,
 
 		/**
+		 * Default settings.
+		 *
+		 * @type {Object}
+		 */
+		defaults: {
+			/**
+			 * If we should beautify (format) HTML when opening the editor.
+			 *
+			 * @type {Boolean}
+			 */
+			beautify: true
+		},
+
+		/**
 		 * Executed on plugin initialization.
 		 */
 		init: function () {
+			// merge user settings with the defaults
+			this.settings = $.extend(true, this.defaults, this.settings);
+
 			this.$element = $('<div class="aloha-plugin-htmlsource">');
 			this.createDialog();
 			this.createEditor();
@@ -179,8 +196,9 @@ define(function (require) {
 			$('body').css('overflow', 'hidden');
 
 			this.editable = Aloha.getActiveEditable();
-			this.origContent = this.editable.getContents();
-			this.editor.setValue(htmlBeautifier(this.origContent));
+			this.origContent = this.getEditableContent();
+			this.editor.setValue(this.settings.beautify ? this.beautifyHtml(this.origContent) : this.origContent);
+
 			this.resizeEditor();
 		},
 
@@ -209,7 +227,7 @@ define(function (require) {
 		 */
 		onRestore: function () {
 			this.$dialog.dialog('close');
-			this.setEditableContent(htmlBeautifier(this.origContent));
+			this.setEditableContent(this.origContent);
 		},
 
 		/**
@@ -217,6 +235,37 @@ define(function (require) {
 		 */
 		onContentChange: function () {
 			this.setEditableContent(this.editor.getValue());
+		},
+
+		/**
+		 * Beautify the HTML (auto-indent).
+		 *
+		 * @param  {String} content
+		 * @return {String}
+		 */
+		beautifyHtml: function (content) {
+			return htmlBeautifier(content, {
+				brace_style: 'collapse',
+				break_chained_methods: false,
+				indent_char: ' ',
+				indent_scripts: 'normal',
+				indent_size: '4',
+				keep_array_indentation: false,
+				preserve_newlines: true,
+				space_after_anon_function: true,
+				space_before_conditional: true,
+				unescape_strings: false
+			});
+		},
+
+		/**
+		 * Get HTML of the editable. Note that we are not using editable.getContents() to avoid serialization made
+		 * in dom-to-xhtml plugin that will mess up intended white-spacing (&nbsp;).
+		 *
+		 * @return {String}
+		 */
+		getEditableContent: function () {
+			return this.editable.obj.html();
 		},
 
 		/**
@@ -228,6 +277,7 @@ define(function (require) {
 		setEditableContent: function (content) {
 			// don't use jQuery .html() since it executes content in script elements and remove them
 			this.editable.obj.get(0).innerHTML = content;
+
 			this.editable.smartContentChange({
 				type: 'set-contents'
 			});
