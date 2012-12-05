@@ -16,17 +16,20 @@ To use the plugins you have to configure a custom path for the plugins.
 		bundles: {
 			'aptoma': '../../../aloha/aptoma/plugins'
 		},
-		// which plugins to load
-		load: [
-			'common/ui',
-			'aptoma/align-dev',
-			'aptoma/styles',
-			'aptoma/font',
-			'aptoma/textresize',
-			'aptoma/colorpicker',
-			'aptoma/reset',
-			'aptoma/htmlsource'
-		]
+		plugins: {
+			// which plugins to load
+			load: [
+				'common/ui',
+				'aptoma/align-dev',
+				'aptoma/styles',
+				'aptoma/font',
+				'aptoma/textresize',
+				'aptoma/colorpicker',
+				'aptoma/reset',
+				'aptoma/htmlsource'
+			]
+		}
+		
 	};
 
 ## Configuration
