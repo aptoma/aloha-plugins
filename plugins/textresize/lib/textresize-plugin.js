@@ -36,6 +36,73 @@ define(function (require) {
 	}
 
 	/**
+	 * Returns a function, that, as long as it continues to be invoked, will not
+	 * be triggered. The function will be called after it stops being called for
+	 * N milliseconds. If `immediate` is passed, trigger the function on the
+	 * leading edge, instead of the trailing.
+	 *
+	 * @param {Function} func
+	 * @param {Number} wait
+	 * @param {Boolean} immediate
+	 * @return {Function}
+	 */
+	function debounce(func, wait, immediate) {
+		var timeout, result;
+		return function () {
+			var context = this, args = arguments;
+			var later = function () {
+				timeout = null;
+				if (!immediate) {
+					result = func.apply(context, args);
+				}
+			};
+			var callNow = immediate && !timeout;
+			clearTimeout(timeout);
+			timeout = setTimeout(later, wait);
+			if (callNow) {
+				result = func.apply(context, args);
+			}
+			return result;
+		};
+	}
+
+	/**
+	 * Returns a function, that, when invoked, will only be triggered at most once during a given window of time.
+	 *
+	 * @param  {Function} func
+	 * @param  {Number} wait
+	 * @return {Function}
+	 */
+	function throttle(func, wait) {
+		var context, args, timeout, throttling, more, result;
+		var whenDone = debounce(function () {
+			more = throttling = false;
+		}, wait);
+		return function () {
+			context = this;
+			args = arguments;
+			var later = function () {
+				timeout = null;
+				if (more) {
+					result = func.apply(context, args);
+				}
+				whenDone();
+			};
+			if (!timeout) {
+				timeout = setTimeout(later, wait);
+			}
+			if (throttling) {
+				more = true;
+			} else {
+				throttling = true;
+				result = func.apply(context, args);
+			}
+			whenDone();
+			return result;
+		};
+	}
+
+	/**
 	 * Store a reference to the original publish method.
 	 *
 	 * @type {Function}
@@ -193,6 +260,9 @@ define(function (require) {
 			});
 
 			this.subscribeEvents();
+
+			// Use same delay as Aloha.activeEditable.sccDelay
+			this.debouncedTriggerSmartContentChange = debounce(this.triggerSmartContentChange, 500);
 		},
 
 		/**
@@ -217,6 +287,7 @@ define(function (require) {
 
 					editable.obj.bind('keyup', keyCombo, function (e) {
 						filterPubSubEvents(false);
+						self.triggerSmartContentChange();
 					});
 				});
 			});
@@ -374,6 +445,32 @@ define(function (require) {
 					// $classElement.removeAttr('class');
 					// TODO: the cssClassApplier seems to remove other classes when remove the entire class attribute
 				}
+			});
+
+			this.debouncedTriggerSmartContentChange();
+		},
+
+		/**
+		 * Trigger a aloha-smart-content-changed event. We should be able to use the
+		 * Aloha.activeEditable.smartContentChange method but it seems to be a bit broken right now.
+		 */
+		triggerSmartContentChange: function () {
+			var snapshot = null;
+
+			function getSnapshotContent() {
+				if (null === snapshot) {
+					snapshot = Aloha.activeEditable.getSnapshotContent();
+				}
+				return snapshot;
+			}
+
+			Aloha.trigger('aloha-smart-content-changed', {
+				'editable': Aloha.activeEditable,
+				'keyIdentifier': null,
+				'keyCode': null,
+				'char': null,
+				'triggerType': 'text-resize',
+				'getSnapshotContent': getSnapshotContent
 			});
 		},
 
