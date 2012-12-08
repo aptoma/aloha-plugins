@@ -67,47 +67,18 @@ define(function (require) {
 	}
 
 	/**
-	 * Returns a function, that, when invoked, will only be triggered at most once during a given window of time.
-	 *
-	 * @param  {Function} func
-	 * @param  {Number} wait
-	 * @return {Function}
-	 */
-	function throttle(func, wait) {
-		var context, args, timeout, throttling, more, result;
-		var whenDone = debounce(function () {
-			more = throttling = false;
-		}, wait);
-		return function () {
-			context = this;
-			args = arguments;
-			var later = function () {
-				timeout = null;
-				if (more) {
-					result = func.apply(context, args);
-				}
-				whenDone();
-			};
-			if (!timeout) {
-				timeout = setTimeout(later, wait);
-			}
-			if (throttling) {
-				more = true;
-			} else {
-				throttling = true;
-				result = func.apply(context, args);
-			}
-			whenDone();
-			return result;
-		};
-	}
-
-	/**
 	 * Store a reference to the original publish method.
 	 *
 	 * @type {Function}
 	 */
 	var origPub = PubSub.pub;
+
+	/**
+	 * Indicates if the keyboard shortcut is hold down (pressed).
+	 *
+	 * @type {Boolean}
+	 */
+	var keyDownRepeat = false;
 
 	/**
 	 * This method is needed to avoid triggering the "aloha.selection.context-change" while holding down a keyboard
@@ -282,10 +253,12 @@ define(function (require) {
 					editable.obj.bind('keydown', keyCombo, function (e) {
 						filterPubSubEvents(true);
 						self[fn](e);
+						keyDownRepeat = true;
 						return false;
 					});
 
 					editable.obj.bind('keyup', keyCombo, function (e) {
+						keyDownRepeat = false;
 						filterPubSubEvents(false);
 						self.triggerSmartContentChange();
 					});
@@ -418,6 +391,24 @@ define(function (require) {
 		 * @param  {Object} attr
 		 */
 		changeStyle: function (attr) {
+			if (!keyDownRepeat) {
+				// only run the initial cleanup and selection stuff one time when holding down a keyboard
+				// shortcut for resizing (no need to run it more since the selection won't change)
+				this.initialChangeStyle(attr);
+			} else {
+				$(Aloha.Selection.getRangeObject().getCommonAncestorContainer()).css(attr);
+			}
+
+			this.debouncedTriggerSmartContentChange();
+		},
+
+		/**
+		 * Change the style for the selection / cursor target and do some
+		 * cleanup and formatting of the selection.
+		 *
+		 * @param  {Object} attr
+		 */
+		initialChangeStyle: function (attr) {
 			var self = this;
 
 			// remove previous styles in the selection
@@ -446,8 +437,6 @@ define(function (require) {
 					// TODO: the cssClassApplier seems to remove other classes when remove the entire class attribute
 				}
 			});
-
-			this.debouncedTriggerSmartContentChange();
 		},
 
 		/**
