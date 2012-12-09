@@ -248,21 +248,25 @@ define(function (require) {
 				}
 			});
 
-			Aloha.bind('aloha-editable-created', function (e, editable) {
+			Aloha.bind('aloha-editable-activated', function (e, params) {
 				$.each(self.hotKey, function (fn, keyCombo) {
-					editable.obj.bind('keydown', keyCombo, function (e) {
+					params.editable.obj.bind('keydown.aloha.textresize', keyCombo, function (e) {
 						filterPubSubEvents(true);
 						self[fn](e);
 						keyDownRepeat = true;
 						return false;
 					});
 
-					editable.obj.bind('keyup', keyCombo, function (e) {
+					params.editable.obj.bind('keyup.aloha.textresize', keyCombo, function (e) {
 						keyDownRepeat = false;
 						filterPubSubEvents(false);
 						self.triggerSmartContentChange();
 					});
 				});
+			});
+
+			Aloha.bind('aloha-editable-deactivated', function (e, params) {
+				params.editable.obj.unbind('.aloha.textresize');
 			});
 		},
 
