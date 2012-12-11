@@ -93,6 +93,18 @@ define(function (require) {
 			this.createEditor();
 			this.createDialog();
 			this.createButton();
+			this.subscribeEvents();
+		},
+
+		/**
+		 * Subscribe for events.
+		 */
+		subscribeEvents: function () {
+			var self = this;
+
+			Aloha.bind('aloha-editable-deactivated', function (e, params) {
+				self.$dialog.dialog('close');
+			});
 		},
 
 		/**
@@ -148,6 +160,12 @@ define(function (require) {
 			this.$dialog.dialog('widget').draggable('option', {
 				'scroll': false,
 				'containment': 'window'
+			});
+
+			this.$dialog.dialog('option', 'position', {
+				my: 'center',
+				at: 'center',
+				of: window
 			});
 
 			this.applyScrollFix();
@@ -227,11 +245,6 @@ define(function (require) {
 			this.editable = Aloha.getActiveEditable();
 			this.origContent = this.getEditableContent();
 			this.editor.setValue(this.settings.beautify ? this.beautifyHtml(this.origContent) : this.origContent);
-			this.$dialog.dialog('option', 'position', {
-				my: 'center',
-				at: 'center',
-				of: window
-			});
 			this.resizeEditor();
 		},
 
