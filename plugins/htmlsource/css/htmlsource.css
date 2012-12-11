@@ -1,5 +1,6 @@
 .aloha-plugin-htmlsource-dialog {
     font-size: 12px;
+	position: fixed !important;
 }
 
 .aloha-plugin-htmlsource.ui-dialog-content {

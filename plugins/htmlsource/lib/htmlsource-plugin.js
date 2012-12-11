@@ -12,7 +12,8 @@ define(function (require) {
 		plugin = require('aloha/plugin'),
 		htmlBeautifier = require('./htmlbeautifier'),
 		CodeMirror = require('./codemirror'),
-		$ = require('jquery');
+		$ = require('jquery'),
+		$ui = require('jqueryui');
 
 	/**
 	 * Plugin CSS dependencies.
@@ -89,8 +90,8 @@ define(function (require) {
 			this.settings = $.extend(true, this.defaults, this.settings);
 
 			this.$element = $('<div class="aloha-plugin-htmlsource">');
-			this.createDialog();
 			this.createEditor();
+			this.createDialog();
 			this.createButton();
 		},
 
@@ -124,14 +125,15 @@ define(function (require) {
 				title: 'HTML Source Editor',
 				dialogClass: 'aloha-plugin-htmlsource-dialog',
 				modal: false,
+				resizable: true,
 				width: this.width,
 				height: this.height,
 				autoOpen: false,
 				zIndex: 10101,
 				create: $.proxy(this.onCreate, this),
 				open: $.proxy(this.onOpen, this),
+				resize: $.proxy(this.onResize, this),
 				resizeStop: $.proxy(this.onResized, this),
-				close: $.proxy(this.onClose, this),
 				buttons: {
 					'Restore': $.proxy(this.onRestore, this)
 				}
@@ -140,6 +142,37 @@ define(function (require) {
 			// stop event bubbling so Aloha doesn't lose focus when clicking inside the dialog
 			this.$dialog.dialog('widget').bind('mousedown', function (e) {
 				e.stopPropagation();
+			});
+
+			// fix to make jQuery UI dialog behave when using fixed position
+			this.$dialog.dialog('widget').draggable('option', {
+				'scroll': false,
+				'containment': 'window'
+			});
+
+			this.applyScrollFix();
+		},
+
+		/**
+		 * Fix so window behind the dialog doesn't scroll when reaching the top or bottom.
+		 */
+		applyScrollFix: function () {
+			var self = this,
+				scrollElement = this.editor.getScrollerElement();
+
+			this.$dialog.dialog('widget').bind('DOMMouseScroll, mousewheel', function (e) {
+				var up,
+					si = self.editor.getScrollInfo();
+
+				if (e.type === 'DOMMouseScroll') {
+					up = e.originalEvent.detail < 0 ? true : false; // firefox
+				} else {
+					up = e.originalEvent.wheelDeltaY > 0 ? true : false; // webkit
+				}
+
+				if (up && si.y === 0 || !up && scrollElement.clientHeight + si.y >= si.height) {
+					e.preventDefault();
+				}
 			});
 		},
 
@@ -191,15 +224,28 @@ define(function (require) {
 		 * @param  {Object} ui
 		 */
 		onOpen: function (e, ui) {
-			// scroll fix
-			this.overflow = $('body').css('overflow');
-			$('body').css('overflow', 'hidden');
-
 			this.editable = Aloha.getActiveEditable();
 			this.origContent = this.getEditableContent();
 			this.editor.setValue(this.settings.beautify ? this.beautifyHtml(this.origContent) : this.origContent);
-
+			this.$dialog.dialog('option', 'position', {
+				my: 'center',
+				at: 'center',
+				of: window
+			});
 			this.resizeEditor();
+		},
+
+		/**
+		 * Called when the dialog being resized.
+		 *
+		 * @param  {jQuery.Event} e
+		 * @param  {Object} ui
+		 */
+		onResize: function (e, ui) {
+			this.$dialog.dialog('option', 'position', [
+				(Math.floor(ui.position.left) - $(window).scrollLeft()),
+				(Math.floor(ui.position.top) - $(window).scrollTop())
+			]);
 		},
 
 		/**
@@ -210,16 +256,6 @@ define(function (require) {
 		 */
 		onResized: function (e, ui) {
 			this.resizeEditor();
-		},
-
-		/**
-		 * Called when closing the dialog.
-		 *
-		 * @param  {jQuery.Event} e
-		 * @param  {Object} ui
-		 */
-		onClose: function (e, ui) {
-			$('body').css('overflow', this.overflow);
 		},
 
 		/**
