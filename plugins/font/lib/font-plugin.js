@@ -83,7 +83,7 @@ define(function (require) {
 				.addClass('aloha-plugin-font')
 				.attr('title', 'Toggle font');
 
-			PubSub.sub('aloha.selection.context-change', function(message) {
+			PubSub.sub('aloha.selection.context-change', function (message) {
 				self.onSelectionChanged(message.range);
 			});
 		},
