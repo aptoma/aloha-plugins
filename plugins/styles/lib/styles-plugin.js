@@ -66,11 +66,37 @@ define(function (require) {
 		 * Executed on plugin initialization.
 		 */
 		init: function () {
-			var self = this,
-				menuItems = [];
+			var self = this;
 
 			// merge user settings with the defaults
 			this.settings = $.extend(true, this.defaults, this.settings);
+
+			this.createMenu();
+
+			PubSub.sub('aloha.selection.context-change', function (message) {
+				self.onSelectionChanged(message.range);
+			});
+		},
+
+		/**
+		 * Reset states and the menu (used when updating an existing menu).
+		 */
+		reset: function () {
+			this.selectionSelectorsMatched = [];
+			this.cssClassAppliers = {};
+
+			// TODO: find a way to do it properly in Aloha
+			if (this.menuButton) {
+				this.menuButton.element.remove();
+			}
+		},
+
+		/**
+		 * Creates the dropdown menu and populates it with classes.
+		 */
+		createMenu: function () {
+			var self = this,
+				menuItems = [];
 
 			$.each(this.settings.classes, function (idx, classes) {
 				$.each(classes, function (title, className) {
@@ -97,10 +123,6 @@ define(function (require) {
 			});
 
 			$(this.menuButton.element).addClass('aloha-plugin-styles');
-
-			PubSub.sub('aloha.selection.context-change', function(message) {
-				self.onSelectionChanged(message.range);
-			});
 		},
 
 		/**
@@ -218,6 +240,16 @@ define(function (require) {
 			} else {
 				this.cssClassAppliers[className].toggleSelection();
 			}
+		},
+
+		/**
+		 * Update styles in the menu.
+		 * @param  {Object} classes
+		 */
+		updateStyleClasses: function (classes) {
+			this.reset();
+			this.settings.classes = classes;
+			this.createMenu();
 		}
 	});
 });
