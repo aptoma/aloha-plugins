@@ -8,8 +8,8 @@ define(function (require) {
 		Ui = require('ui/ui'),
 		Button = require('ui/button'),
 		plugin = require('aloha/plugin'),
-		Dom = require('../../../lib/dom'),
-		Style = require('../../../lib/style'),
+		Dom = require('aptoma/lib/dom'),
+		Style = require('aptoma/lib/style'),
 		$ = require('jquery');
 
 	/**

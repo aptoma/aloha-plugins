@@ -12,6 +12,12 @@ Make a custom directory somewhere (preferably outside of the standard Aloha dire
 To use the plugins you have to configure a custom path for the plugins.
 
 	Aloha.settings = {
+        // path needed for shared libs used by plugins
+        requireConfig: {
+            paths: {
+                'aptoma': '../../../aloha/aptoma'
+            }
+        },
 		// path for custom plugins (relative from Aloha.settings.baseUrl)
 		bundles: {
 			'aptoma': '../../../aloha/aptoma/plugins'
@@ -29,7 +35,7 @@ To use the plugins you have to configure a custom path for the plugins.
 				'aptoma/htmlsource'
 			]
 		}
-		
+
 	};
 
 ## Configuration

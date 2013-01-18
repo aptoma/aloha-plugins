@@ -9,11 +9,11 @@ define(function (require) {
 		Button = require('ui/button'),
 		PubSub = require('PubSub'),
 		plugin = require('aloha/plugin'),
-		Dom = require('../../../lib/dom'),
-		Css = require('../../../lib/css'),
-		Selection = require('../../../lib/selection'),
-		Range = require('../../../lib/range'),
-		Style = require('../../../lib/style'),
+		Dom = require('aptoma/lib/dom'),
+		Css = require('aptoma/lib/css'),
+		Selection = require('aptoma/lib/selection'),
+		Range = require('aptoma/lib/range'),
+		Style = require('aptoma/lib/style'),
 		$ = require('jquery');
 
 	/**

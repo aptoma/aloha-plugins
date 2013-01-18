@@ -7,14 +7,14 @@ define(function (require) {
 	var Aloha = require('aloha'),
 		Ui = require('ui/ui'),
 		Button = require('ui/button'),
-		MenuButton = require('../../../lib/ui/menuButton'),
+		MenuButton = require('aptoma/lib/ui/menuButton'),
 		PubSub = require('PubSub'),
 		plugin = require('aloha/plugin'),
-		Range = require('../../../lib/range'),
-		Css = require('../../../lib/css'),
-		Dom = require('../../../lib/dom'),
-		Style = require('../../../lib/style'),
-		Selection = require('../../../lib/selection'),
+		Range = require('aptoma/lib/range'),
+		Css = require('aptoma/lib/css'),
+		Dom = require('aptoma/lib/dom'),
+		Style = require('aptoma/lib/style'),
+		Selection = require('aptoma/lib/selection'),
 		$ = require('jquery');
 
 	/**

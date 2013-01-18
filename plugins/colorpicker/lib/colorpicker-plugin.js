@@ -10,9 +10,9 @@ define(function (require) {
 		PubSub = require('PubSub'),
 		plugin = require('aloha/plugin'),
 		$ = require('jquery'),
-		Css = require('../../../lib/css'),
-		Range = require('../../../lib/range'),
-		Style = require('../../../lib/style');
+		Css = require('aptoma/lib/css'),
+		Range = require('aptoma/lib/range'),
+		Style = require('aptoma/lib/style');
 
 	/**
 	 * Load colorpicker jquery plugin
