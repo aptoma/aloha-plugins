@@ -12,10 +12,14 @@ Make a custom directory somewhere (preferably outside of the standard Aloha dire
 To use the plugins you have to configure a custom path for the plugins.
 
 	Aloha.settings = {
-        // path needed for shared libs used by plugins
         requireConfig: {
+            // path needed for shared libs used by plugins
             paths: {
                 'aptoma': '../../../aloha/aptoma'
+            },
+            // use our modified Rangy lib which fixes the problem with the CssClassApplier module loading issues
+            '*': {
+                'vendor/rangy-core': '../../../components/aloha-plugins/lib/rangy-core'
             }
         },
 		// path for custom plugins (relative from Aloha.settings.baseUrl)
