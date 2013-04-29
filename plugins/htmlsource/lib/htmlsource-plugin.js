@@ -28,55 +28,47 @@ define(function (require) {
 
 		/**
 		 * Dialog width.
-		 *
 		 * @type {Number}
 		 */
 		width: 600,
 
 		/**
 		 * Dialog height.
-		 *
 		 * @type {Number}
 		 */
 		height: 370,
 
 		/**
 		 * The active editor.
-		 *
 		 * @type {Editable}
 		 */
 		editable: null,
 
 		/**
 		 * CodeMirror editor instance.
-		 *
 		 * @type {CodeMirror}
 		 */
 		editor: null,
 
 		/**
 		 * Content set when opening the dialog (used for restoring).
-		 *
 		 * @type {String}
 		 */
 		origContent: null,
 
 		/**
 		 * Dialog element.
-		 *
 		 * @type {jQuery.Element}
 		 */
 		$dialog: null,
 
 		/**
 		 * Default settings.
-		 *
 		 * @type {Object}
 		 */
 		defaults: {
 			/**
 			 * If we should beautify (format) HTML when opening the editor.
-			 *
 			 * @type {Boolean}
 			 */
 			beautify: true
@@ -109,7 +101,6 @@ define(function (require) {
 
 		/**
 		 * Create the editor.
-		 *
 		 * @see http://codemirror.net/doc/compress.html
 		 * (codemirror.js, css.js, javascript.js, xml.js, htmlmixed.js)
 		 */
@@ -144,6 +135,7 @@ define(function (require) {
 				zIndex: 10101,
 				create: $.proxy(this.onCreate, this),
 				open: $.proxy(this.onOpen, this),
+				close: $.proxy(this.onClosed, this),
 				resize: $.proxy(this.onResize, this),
 				resizeStop: $.proxy(this.onResized, this),
 				buttons: {
@@ -223,7 +215,6 @@ define(function (require) {
 
 		/**
 		 * Called when the dialog is created.
-		 *
 		 * @param  {jQuery.Event} e
 		 * @param  {Object} ui
 		 */
@@ -237,20 +228,26 @@ define(function (require) {
 
 		/**
 		 * Called when opening the dialog.
-		 *
 		 * @param  {jQuery.Event} e
 		 * @param  {Object} ui
 		 */
 		onOpen: function (e, ui) {
 			this.editable = Aloha.getActiveEditable();
+			Aloha.trigger('aloha-plugin-htmlsource-opened', this.editable);
 			this.origContent = this.getEditableContent();
 			this.editor.setValue(this.settings.beautify ? this.beautifyHtml(this.origContent) : this.origContent);
 			this.resizeEditor();
 		},
 
 		/**
+		 * Called when closing the dialog.
+		 */
+		onClosed: function () {
+			Aloha.trigger('aloha-plugin-htmlsource-closed', this.editable);
+		},
+
+		/**
 		 * Called when the dialog being resized.
-		 *
 		 * @param  {jQuery.Event} e
 		 * @param  {Object} ui
 		 */
@@ -263,7 +260,6 @@ define(function (require) {
 
 		/**
 		 * Called when the dialog has been resized.
-		 *
 		 * @param  {jQuery.Event} e
 		 * @param  {Object} ui
 		 */
@@ -288,7 +284,6 @@ define(function (require) {
 
 		/**
 		 * Beautify the HTML (auto-indent).
-		 *
 		 * @param  {String} content
 		 * @return {String}
 		 */
@@ -310,7 +305,6 @@ define(function (require) {
 		/**
 		 * Get HTML of the editable. Note that we are not using editable.getContents() to avoid serialization made
 		 * in dom-to-xhtml plugin that will mess up intended white-spacing (&nbsp;).
-		 *
 		 * @return {String}
 		 */
 		getEditableContent: function () {
@@ -320,7 +314,6 @@ define(function (require) {
 		/**
 		 * Set the contents of this editable as a HTML string. Note that we're not using
 		 * this.editable.setContents() to avoid aloha-editable-deactivated event.
-		 *
 		 * @param {String} content
 		 */
 		setEditableContent: function (content) {
