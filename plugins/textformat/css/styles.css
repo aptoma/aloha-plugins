@@ -1,0 +1,13 @@
+.textformat-plugin-icon {
+	background-image: url(../img/sprites.png) !important;
+	background-repeat: no-repeat !important;
+	width: 16px !important;
+}
+
+.textformat-plugin-icon.textformat-plugin-icon-h3 {
+	background-position: 0 0;
+}
+
+.textformat-plugin-icon.textformat-plugin-icon-p {
+	background-position: -16px 0;
+}
