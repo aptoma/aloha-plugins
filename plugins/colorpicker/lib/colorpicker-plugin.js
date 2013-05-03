@@ -48,9 +48,7 @@ define(function (require) {
 		 * Executed on plugin initialization.
 		 */
 		init: function () {
-			var self = this;
 			this.cssClassApplier = Css.createClassApplier(this.tmpClassName);
-
             this.createButtons();
 			this.subscribeEvents();
 		},

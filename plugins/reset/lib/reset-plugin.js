@@ -84,7 +84,7 @@ define(function (require) {
 				}
 
 				if ($(el).attr('style')) {
-					$.each(Style.getStyles(el, true), function (propertyName, value) {
+					$.each(Style.getStyles(el, true), function (propertyName) {
 						if (self.settings.whitelist.styles.indexOf(propertyName) < 0) {
 							Style.removeStyle(el, propertyName);
 						}

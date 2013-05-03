@@ -1,4 +1,3 @@
-/*global CodeMirror */
 define(function (require) {
 	'use strict';
 
@@ -8,12 +7,12 @@ define(function (require) {
 	var Aloha = require('aloha'),
 		Ui = require('ui/ui'),
 		Button = require('ui/button'),
-		Dialog = require('ui/dialog'),
 		plugin = require('aloha/plugin'),
 		htmlBeautifier = require('./htmlbeautifier'),
 		CodeMirror = require('./codemirror'),
-		$ = require('jquery'),
-		$ui = require('jqueryui');
+		$ = require('jquery');
+
+	require('jqueryui');
 
 	/**
 	 * Plugin CSS dependencies.
@@ -94,7 +93,7 @@ define(function (require) {
 		subscribeEvents: function () {
 			var self = this;
 
-			Aloha.bind('aloha-editable-deactivated', function (e, params) {
+			Aloha.bind('aloha-editable-deactivated', function () {
 				self.$dialog.dialog('close');
 			});
 		},
@@ -218,7 +217,7 @@ define(function (require) {
 		 * @param  {jQuery.Event} e
 		 * @param  {Object} ui
 		 */
-		onCreate: function (e, ui) {
+		onCreate: function (e) {
 			var self = this;
 
 			$('<input type="checkbox" name="wraped" id="wraped" checked="checked" /><label for="wraped">Word wrap</label>').click(function () {
@@ -231,7 +230,7 @@ define(function (require) {
 		 * @param  {jQuery.Event} e
 		 * @param  {Object} ui
 		 */
-		onOpen: function (e, ui) {
+		onOpen: function () {
 			this.editable = Aloha.getActiveEditable();
 			Aloha.trigger('aloha-plugin-htmlsource-opened', this.editable);
 			this.origContent = this.getEditableContent();
@@ -263,7 +262,7 @@ define(function (require) {
 		 * @param  {jQuery.Event} e
 		 * @param  {Object} ui
 		 */
-		onResized: function (e, ui) {
+		onResized: function () {
 			this.resizeEditor();
 		},
 

@@ -3,10 +3,12 @@
 	"name": "aloha-plugins",
 	"description": "Custom plugins for the Aloha editor",
 	"url": "https://github.com/aptoma/aloha-plugins",
-	"licenses" : [{
-		"type" : "MIT",
-		"url" : "https://github.com/aptoma/aloha-plugins/raw/master/LICENSE"
-	}],
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "https://github.com/aptoma/aloha-plugins/raw/master/LICENSE"
+		}
+	],
 	"contributors": [
 		{
 			"name": "Patrik Henningsson",
@@ -16,5 +18,11 @@
 			"name": "Martin Jonsson",
 			"email": "martin@aptoma.com"
 		}
-	]
+	],
+	"dependencies": {
+		"jshint": "1.1.0"
+	},
+	"scripts": {
+		"test": "node_modules/jshint/bin/jshint plugins/*/lib/*-plugin.js lib/css.js lib/dom.js lib/range.js lib/selection.js"
+	}
 }

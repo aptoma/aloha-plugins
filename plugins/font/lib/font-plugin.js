@@ -6,7 +6,6 @@ define(function (require) {
 	 */
 	var Aloha = require('aloha'),
 		Ui = require('ui/ui'),
-		Button = require('ui/button'),
 		MenuButton = require('aptoma/lib/ui/menuButton'),
 		PubSub = require('PubSub'),
 		plugin = require('aloha/plugin'),
@@ -93,7 +92,7 @@ define(function (require) {
 		 *
 		 * @param  {GENTICS.Utils.RangeObject} range
 		 */
-		onSelectionChanged: function (range) {
+		onSelectionChanged: function () {
 			this.updateButtonTitle();
 		},
 

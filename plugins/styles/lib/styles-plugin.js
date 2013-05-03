@@ -6,12 +6,10 @@ define(function (require) {
 	 */
 	var Aloha = require('aloha'),
 		Ui = require('ui/ui'),
-		Button = require('ui/button'),
 		MenuButton = require('aptoma/lib/ui/menuButton'),
 		PubSub = require('PubSub'),
 		plugin = require('aloha/plugin'),
 		Range = require('aptoma/lib/range'),
-		Dom = require('aptoma/lib/dom'),
 		Css = require('aptoma/lib/css'),
 		Style = require('aptoma/lib/style'),
 		Selection = require('aptoma/lib/selection'),

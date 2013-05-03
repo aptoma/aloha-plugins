@@ -22,20 +22,6 @@ define(function (require) {
 	require('css!textresize/css/textresize');
 
 	/**
-	 * Return object keys.
-	 *
-	 * @param  {Object} obj
-	 * @return {Array}
-	 */
-	function keys(obj) {
-		var a = [];
-		$.each(obj, function (k) {
-			a.push(k);
-		});
-		return a;
-	}
-
-	/**
 	 * Returns a function, that, as long as it continues to be invoked, will not
 	 * be triggered. The function will be called after it stops being called for
 	 * N milliseconds. If `immediate` is passed, trigger the function on the
@@ -68,14 +54,12 @@ define(function (require) {
 
 	/**
 	 * Store a reference to the original publish method.
-	 *
 	 * @type {Function}
 	 */
 	var origPub = PubSub.pub;
 
 	/**
 	 * Indicates if the keyboard shortcut is hold down (pressed).
-	 *
 	 * @type {Boolean}
 	 */
 	var keyDownRepeat = false;
@@ -84,7 +68,6 @@ define(function (require) {
 	 * This method is needed to avoid triggering the "aloha.selection.context-change" while holding down a keyboard
 	 * shortcut key for resizing the text. Many plugins listening on that event so without this fix, things be very
 	 * slow since the event will trigger very rapidly when resizing.
-	 *
 	 * @param {String} channel
 	 * @param {*} message
 	 * @return {Number}
@@ -99,7 +82,6 @@ define(function (require) {
 	 * This method is needed to avoid triggering the "aloha.selection.context-change" while holding down a keyboard
 	 * shortcut key for resizing the text. Many plugins listening on that event so without this fix, things be very
 	 * slow since the event will trigger very rapidly when resizing.
-	 *
 	 * @param  {Boolean} active
 	 */
 	function filterPubSubEvents(active) {
@@ -108,7 +90,6 @@ define(function (require) {
 
 	/**
 	 * Fix floating point number problems when doing calculations.
-	 *
 	 * @param  {Number} num
 	 * @return {Number}
 	 */
@@ -123,28 +104,24 @@ define(function (require) {
 
 		/**
 		 * Buttons elements.
-		 *
 		 * @type {Object}
 		 */
 		buttons: {},
 
 		/**
 		 * Spinner elements.
-		 *
 		 * @type {Object}
 		 */
 		spinners: {},
 
 		/**
 		 * List of CssClassApplier instances (one per style).
-		 *
 		 * @type {Object}
 		 */
 		cssClassAppliers: {},
 
 		/**
 		 * Config for the spinners (key in camelCased style).
-		 *
 		 * unit = Unit to use when applying the value
 		 * step = Size of the step to take when changing values
 		 * page = Number of steps to take when paging (pageUp/pageDown or shift key)
@@ -257,7 +234,7 @@ define(function (require) {
 						return false;
 					});
 
-					params.editable.obj.bind('keyup.aloha.textresize', keyCombo, function (e) {
+					params.editable.obj.bind('keyup.aloha.textresize', keyCombo, function () {
 						keyDownRepeat = false;
 						filterPubSubEvents(false);
 						self.triggerSmartContentChange();
@@ -273,7 +250,6 @@ define(function (require) {
 		/**
 		 * Create the jQuery UI spinner.
 		 * - http://api.jqueryui.com/spinner/
-		 *
 		 * @param  {String}   name
 		 * @param  {Object}   options
 		 * @param  {Function} cb
@@ -305,7 +281,6 @@ define(function (require) {
 
 		/**
 		 * Will be called every time the context of the selection changes.
-		 *
 		 * @param  {GENTICS.Utils.RangeObject} range
 		 */
 		onSelectionChanged: function (range) {
@@ -320,14 +295,12 @@ define(function (require) {
 
 		/**
 		 * Get the given style of current selection or cursor position.
-		 *
 		 * @param  {String} style
 		 * @param  {Number} defaultValue
 		 * @return {Number}
 		 */
 		getCurrentStyle: function (style, defaultValue) {
-			var self = this,
-				range = Aloha.Selection.getRangeObject(),
+			var range = Aloha.Selection.getRangeObject(),
 				styleValueRegex = new RegExp('([0-9\\-\\.]+)' + this.config[style].unit),
 				match;
 
@@ -361,15 +334,14 @@ define(function (require) {
 
 		/**
 		 * Get values for a styles.
-		 *
 		 * @param  {GENTICS.Utils.RangeObject} range
 		 * @return {Object}
 		 */
-		getStyles: function (range) {
+		getStyles: function () {
 			var self = this,
 				styles = {};
 
-			$.each(this.config, function (style, config) {
+			$.each(this.config, function (style) {
 				var value = self.getCurrentStyle(style);
 				if (value) {
 					styles[style] = value;
@@ -381,7 +353,6 @@ define(function (require) {
 
 		/**
 		 * Return a classname for the given style (used temporary in the changeStyle method).
-		 *
 		 * @param  {String} style
 		 * @return {String}
 		 */
@@ -391,7 +362,6 @@ define(function (require) {
 
 		/**
 		 * Change the style for the selection / cursor target.
-		 *
 		 * @param  {Object} attr
 		 */
 		changeStyle: function (attr) {
@@ -409,7 +379,6 @@ define(function (require) {
 		/**
 		 * Change the style for the selection / cursor target and do some
 		 * cleanup and formatting of the selection.
-		 *
 		 * @param  {Object} attr
 		 */
 		initialChangeStyle: function (attr) {
@@ -469,7 +438,6 @@ define(function (require) {
 
 		/**
 		 * Change the font-size value of the active selection.
-		 *
 		 * @param  {Number} value
 		 */
 		changeFontSize: function (value) {
@@ -485,7 +453,6 @@ define(function (require) {
 
 		/**
 		 * Change the line-height value of the active selection.
-		 *
 		 * @param  {Number} value
 		 */
 		changeLineHeight: function (value) {
@@ -499,7 +466,6 @@ define(function (require) {
 
 		/**
 		 * Change the letter-spacing value of the active selection.
-		 *
 		 * @param  {Number} value
 		 */
 		changeLetterSpacing: function (value) {
@@ -513,7 +479,6 @@ define(function (require) {
 
 		/**
 		 * Change the word-spacing value of the active selection.
-		 *
 		 * @param  {Number} value
 		 */
 		changeWordSpacing: function (value) {
@@ -527,7 +492,6 @@ define(function (require) {
 
 		/**
 		 * Decrease the font-size one step.
-		 *
 		 * @param {jQuery.Event} e
 		 */
 		decreaseFontSize: function (e) {
@@ -544,7 +508,6 @@ define(function (require) {
 
 		/**
 		 * Increase the font-size one step.
-		 *
 		 * @param {jQuery.Event} e
 		 */
 		increaseFontSize: function (e) {
@@ -561,7 +524,6 @@ define(function (require) {
 
 		/**
 		 * Decrease the line-height one step.
-		 *
 		 * @param {jQuery.Event} e
 		 */
 		decreaseLineHeight: function (e) {
@@ -578,7 +540,6 @@ define(function (require) {
 
 		/**
 		 * Increase the line-height one step.
-		 *
 		 * @param {jQuery.Event} e
 		 */
 		increaseLineHeight: function (e) {

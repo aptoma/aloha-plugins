@@ -44,10 +44,14 @@ To use the plugins you have to configure a custom path for the plugins.
 
 	};
 
+## Notes
+
+The ```align-dev``` plugin is a copy of the original one in Aloha but includes a fix to apply the alignment to a block level element if possible.
+
 ## Configuration
 
 See each plugin for configuration examples.
 
 ## Tests
 
-Coming soon ..
+	$ npm test
