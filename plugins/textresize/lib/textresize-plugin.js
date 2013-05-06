@@ -186,13 +186,15 @@ define(function (require) {
 		init: function () {
 			var self = this;
 
-			// iterate over all different styles
-			$.each(['fontSize', 'lineHeight', 'letterSpacing', 'wordSpacing'], function (idx, key) {
-
-				// merge user config with default
+			// merge user config with default
+			$.each(this.config, function (key) {
 				if (self.settings.config && self.settings.config[key]) {
 					$.extend(self.config[key], self.settings.config[key]);
 				}
+			});
+
+			// iterate over all different styles
+			$.each(['fontSize', 'lineHeight', 'letterSpacing', 'wordSpacing'], function (idx, key) {
 
 				// create button
 				self.buttons[key] = Ui.adopt(key, Button, {
@@ -345,7 +347,7 @@ define(function (require) {
 			var self = this,
 				styles = {};
 
-			$.each(this.config, function (style) {
+			$.each(['fontSize', 'lineHeight', 'letterSpacing', 'wordSpacing'], function (idx, style) {
 				var value = self.getCurrentStyle(style);
 				if (value) {
 					styles[style] = value;
