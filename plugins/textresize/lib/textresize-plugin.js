@@ -132,6 +132,9 @@ define(function (require) {
 		 * @type {Object}
 		 */
 		config: {
+			autoFit: {
+				margin: 0
+			},
 			fontSize: {
 				unit: 'px',
 				step: 1,
@@ -184,7 +187,7 @@ define(function (require) {
 			var self = this;
 
 			// iterate over all different styles
-			$.each(this.config, function (key) {
+			$.each(['fontSize', 'lineHeight', 'letterSpacing', 'wordSpacing'], function (idx, key) {
 
 				// merge user config with default
 				if (self.settings.config && self.settings.config[key]) {
@@ -593,6 +596,10 @@ define(function (require) {
 			}
 
 			this.changeFontSize(--fontSize);
+
+			if (this.config.autoFit.margin) {
+				this.changeFontSize(fontSize - this.config.autoFit.margin);
+			}
 
 			$el.css('white-space', origWhiteSpace === 'normal' ? '' : origWhiteSpace);
 			keyDownRepeat = false;
