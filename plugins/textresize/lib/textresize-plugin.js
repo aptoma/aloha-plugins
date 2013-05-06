@@ -14,7 +14,8 @@ define(function (require) {
 		Selection = require('aptoma/lib/selection'),
 		Range = require('aptoma/lib/range'),
 		Style = require('aptoma/lib/style'),
-		$ = require('jquery');
+		$ = require('jquery'),
+		GENTICS = window.GENTICS;
 
 	/**
 	 * Plugin CSS dependencies.
@@ -26,7 +27,6 @@ define(function (require) {
 	 * be triggered. The function will be called after it stops being called for
 	 * N milliseconds. If `immediate` is passed, trigger the function on the
 	 * leading edge, instead of the trailing.
-	 *
 	 * @param {Function} func
 	 * @param {Number} wait
 	 * @param {Boolean} immediate
@@ -173,7 +173,8 @@ define(function (require) {
 			decreaseFontSize: 'ctrl+left ctrl+shift+left',
 			increaseFontSize: 'ctrl+right ctrl+shift+right',
 			decreaseLineHeight: 'ctrl+up ctrl+shift+up',
-			increaseLineHeight: 'ctrl+down ctrl+shift+down'
+			increaseLineHeight: 'ctrl+down ctrl+shift+down',
+			autofitFontSize: 'alt+space'
 		},
 
 		/**
@@ -552,8 +553,49 @@ define(function (require) {
 			this.changeLineHeight(
 				floatFix(this.getCurrentStyle('lineHeight', this.config.lineHeight.value) + step)
 			);
+		},
+
+		/**
+		 * Autofit the selected text to fit into the full width of the nearest block level element.
+		 */
+		autofitFontSize: function () {
+			var range = Aloha.Selection.getRangeObject(),
+				$parent = $(range.getCommonAncestorContainer()),
+				fontSize = this.config.fontSize.min,
+				maxWidth,
+				origWhiteSpace,
+				$el;
+
+			// try to find the nearest block level element
+			range.findMarkup(function () {
+				if (GENTICS.Utils.Dom.isBlockLevelElement(this)) {
+					$parent = $(this);
+				}
+			}, Aloha.activeEditable.obj);
+
+			maxWidth = $parent.width();
+
+			// always apply size one time to get a new range when text is selected and a new element is created
+			keyDownRepeat = false;
+			this.changeFontSize(fontSize);
+			range = Aloha.Selection.getRangeObject();
+			$el = $(range.getCommonAncestorContainer());
+
+			// ensure the text doesn't wrap while we calculate width
+			origWhiteSpace = $el.css('white-space');
+			$el.css('white-space', 'nowrap');
+
+			// makes changeFontSize() faster while looping ..
+			keyDownRepeat = true;
+
+			while ($el.width() <= maxWidth && ++fontSize <= this.config.fontSize.max) {
+				this.changeFontSize(fontSize);
+			}
+
+			this.changeFontSize(--fontSize);
+
+			$el.css('white-space', origWhiteSpace === 'normal' ? '' : origWhiteSpace);
+			keyDownRepeat = false;
 		}
-
 	});
-
 });
