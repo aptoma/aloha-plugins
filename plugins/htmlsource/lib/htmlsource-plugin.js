@@ -319,8 +319,15 @@ define(function (require) {
 			// don't use jQuery .html() since it executes content in script elements and remove them
 			this.editable.obj.get(0).innerHTML = content;
 
-			this.editable.smartContentChange({
-				type: 'set-contents'
+			Aloha.trigger('aloha-smart-content-changed', {
+				'editable': this.editable,
+				'keyIdentifier': null,
+				'keyCode': null,
+				'char': null,
+				'triggerType': 'idle',
+				'getSnapshotContent': function () {
+					return content;
+				}
 			});
 		}
 	});
