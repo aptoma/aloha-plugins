@@ -16,12 +16,6 @@ To use the plugins you have to configure a custom path for the plugins.
 			// path needed for shared libs used by plugins
 			paths: {
 				'aptoma': '../../../aloha/aptoma'
-			},
-			map {
-				// use our modified Rangy lib which fixes the problem with the CssClassApplier module loading issues
-				'*': {
-					'vendor/rangy-core': '../../../components/aloha-plugins/lib/rangy-core'
-				}
 			}
 		},
 		// path for custom plugins (relative from Aloha.settings.baseUrl)
@@ -32,7 +26,6 @@ To use the plugins you have to configure a custom path for the plugins.
 			// which plugins to load
 			load: [
 				'common/ui',
-				'aptoma/align-dev',
 				'aptoma/styles',
 				'aptoma/font',
 				'aptoma/textresize',
@@ -41,12 +34,11 @@ To use the plugins you have to configure a custom path for the plugins.
 				'aptoma/htmlsource'
 			]
 		}
-
 	};
 
 ## Notes
 
-The ```align-dev``` plugin is a copy of the original one in Aloha but includes a fix to apply the alignment to a block level element if possible.
+Some of the plugins currently depends on [our fork](https://github.com/aptoma/Aloha-Editor) of the Aloha editor which contains some fixes not in the orignal repo (yet).
 
 ## Configuration
 
@@ -54,4 +46,4 @@ See each plugin for configuration examples.
 
 ## Tests
 
-	$ npm test
+	$ grunt jshint
