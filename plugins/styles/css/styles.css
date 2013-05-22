@@ -1,6 +1,20 @@
-.aloha-plugin-styles {
-    display: inline-block;
-    float: none;
+.aloha-plugin-styles .ui-button.ui-button-icon-only.aloha-ui-menubutton-single {
+    width: 36px;
+    height: 23px;
+}
+
+.aloha-plugin-styles .ui-button-text:before {
+	content: ' ';
+	display: block;
+	height: 16px;
+	width: 16px;
+	float: left;
+	margin-top: -2px;
+	background: url(../img/button.png) no-repeat 0 0;
+}
+
+.aloha-plugin-styles .ui-button-icon-secondary {
+	margin-left: 3px !important;
 }
 
 .aloha-plugin-styles .aloha-ui-inline-icon-container {
@@ -9,6 +23,20 @@
 
 .aloha-plugin-styles .aloha-ui-menubutton-menu .aloha-ui-inline-icon {
     margin-bottom: 0;
+}
+
+.aloha-plugin-styles .ui-menu-item a:before {
+	content: ' ';
+	display: block;
+	height: 16px;
+	width: 16px;
+	float: left;
+	visibility: hidden;
+	background: url(../img/tick.png) no-repeat 0 5px;
+}
+
+.aloha-plugin-styles .ui-menu-item.tick a:before {
+	visibility: visible;
 }
 
 .aloha-plugin-styles .aloha-ui-menubutton-menu {

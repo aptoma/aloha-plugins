@@ -13,11 +13,6 @@ define(function (require) {
 	require('jqueryui');
 
 	/**
-	 * Plugin CSS dependencies.
-	 */
-	require('css!./css/styles');
-
-	/**
 	 * Create & register the plugin.
 	 */
 	return plugin.create('charmap', {

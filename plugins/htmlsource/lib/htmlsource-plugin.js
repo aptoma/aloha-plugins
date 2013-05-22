@@ -15,12 +15,6 @@ define(function (require) {
 	require('jqueryui');
 
 	/**
-	 * Plugin CSS dependencies.
-	 */
-	require('css!htmlsource/css/htmlsource');
-	require('css!htmlsource/css/codemirror');
-
-	/**
 	 * Create & register the plugin.
 	 */
 	return plugin.create('htmlsource', {

@@ -16,11 +16,6 @@ define(function (require) {
 		$ = require('jquery');
 
 	/**
-	 * Plugin CSS dependencies.
-	 */
-	require('css!styles/css/styles');
-
-	/**
 	 * Create & register the plugin.
 	 */
 	return plugin.create('styles', {
@@ -103,7 +98,6 @@ define(function (require) {
 
 					menuItems.push({
 						text: title,
-						iconUrl: Aloha.getPluginUrl('styles') + '/img/tick.png',
 						click: function () {
 							self.toggleClassName(className);
 							self.updateMenuItems();
@@ -116,8 +110,7 @@ define(function (require) {
 			this.menuButton = Ui.adopt("styles", MenuButton, {
 				tooltip: 'Toggle CSS classes',
 				menu: menuItems,
-				onShow: $.proxy(this.onMenuShow, this),
-				iconUrl: Aloha.getPluginUrl('styles') + '/img/button.png'
+				onShow: $.proxy(this.onMenuShow, this)
 			});
 
 			$(this.menuButton.element).addClass('aloha-plugin-styles');
@@ -213,11 +206,9 @@ define(function (require) {
 			$('.ui-menu-item', this.menuButton.element).each(function () {
 				var name = $('a', this).text();
 
-				$(this).toggleClass('ui-state-disabled', availableStyleNames.indexOf(name) < 0);
-
-				$('.aloha-ui-inline-icon', this).css(
-					'visibility', activeStyleNames.indexOf(name) < 0 ? 'hidden' : 'visible'
-				);
+				$(this)
+					.toggleClass('ui-state-disabled', availableStyleNames.indexOf(name) < 0)
+					.toggleClass('tick', activeStyleNames.indexOf(name) >= 0);
 			});
 		},
 

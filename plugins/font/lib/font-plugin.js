@@ -17,11 +17,6 @@ define(function (require) {
 		$ = require('jquery');
 
 	/**
-	 * Plugin CSS dependencies.
-	 */
-	require('css!font/css/styles');
-
-	/**
 	 * Create & register the plugin.
 	 */
 	return plugin.create('font', {

@@ -12,11 +12,6 @@ define(function (require) {
 		Format = require('format/format-plugin'),
 		$ = require('jquery');
 
-	/**
-	 * Plugin CSS dependencies.
-	 */
-	require('css!./css/styles');
-
 	var interchangeableNodeNames = {
 		'B': ['STRONG', 'B'],
 		'I': ['EM', 'I'],

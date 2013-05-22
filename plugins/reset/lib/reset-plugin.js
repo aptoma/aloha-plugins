@@ -49,7 +49,7 @@ define(function (require) {
 
 			this.button = Ui.adopt('reset', Button, {
 				tooltip: 'Remove classes & styles from selected text',
-				iconUrl: Aloha.getPluginUrl('reset') + '/img/button.png',
+				icon: 'aloha-icon aloha-plugin-reset-button',
 				click: $.proxy(this.onButtonClick, this)
 			});
 		},

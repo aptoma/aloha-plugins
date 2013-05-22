@@ -20,16 +20,6 @@ define(function (require) {
 	require('./vendor/spectrum/spectrum');
 
 	/**
-	 * Load colorpicker CSS.
-	 */
-	require('css!./vendor/spectrum/spectrum');
-
-    /**
-     * Plugin CSS dependencies.
-     */
-    require('css!./css/styles');
-
-	/**
 	 * Create & register the plugin.
 	 */
 	return plugin.create('colorpicker', {
