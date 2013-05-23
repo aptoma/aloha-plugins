@@ -73,7 +73,10 @@ module.exports = (grunt) ->
 				report: "min"
 			minify:
 				files:
-					"dist/plugins.min.css": "dist/_*.css"
+					"dist/plugins.min.css": [
+						"dist/_*.css"
+						"plugins/colorpicker/vendor/spectrum/spectrum.css"
+					]
 
 		# RequireJS task.
 		# https://github.com/gruntjs/grunt-contrib-requirejs
