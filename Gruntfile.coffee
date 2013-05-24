@@ -32,9 +32,6 @@ module.exports = (grunt) ->
 		# https://npmjs.org/package/grunt-image-embed
 		# ----------------------------------------------------------------------
 		imageEmbed:
-			alignDev:
-				src: "plugins/align-dev/css/styles.css"
-				dest: "dist/_align-dev.css"
 			charmap:
 				src: "plugins/charmap/css/styles.css"
 				dest: "dist/_charmap.css"
