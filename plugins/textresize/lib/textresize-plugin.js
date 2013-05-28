@@ -132,6 +132,7 @@ define(function (require) {
 			},
 			fontSize: {
 				unit: 'px',
+				className: null,
 				step: 1,
 				page: 10,
 				min: 10,
@@ -140,6 +141,7 @@ define(function (require) {
 			},
 			lineHeight: {
 				unit: 'em',
+				className: null,
 				step: 0.1,
 				page: 10,
 				min: 0,
@@ -148,6 +150,7 @@ define(function (require) {
 			},
 			letterSpacing: {
 				unit: 'em',
+				className: null,
 				step: 0.1,
 				page: 10,
 				min: -1,
@@ -156,6 +159,7 @@ define(function (require) {
 			},
 			wordSpacing: {
 				unit: 'em',
+				className: null,
 				step: 0.1,
 				page: 10,
 				min: -1,
@@ -295,18 +299,23 @@ define(function (require) {
 		},
 
 		/**
-		 * Get the given style of current selection or cursor position.
+		 * Get the current value from the given style (or class) of the current selection or cursor position.
 		 * @param  {String} style
 		 * @param  {Number} defaultValue
 		 * @return {Number}
 		 */
-		getCurrentStyle: function (style, defaultValue) {
+		getCurrentValue: function (style, defaultValue) {
 			var range = Aloha.Selection.getRangeObject(),
 				styleValueRegex = new RegExp('([0-9\\-\\.]+)' + this.config[style].unit),
+				needle,
 				match;
 
+			if (this.config[style].className) {
+				needle = this.config[style].className.replace('{value}', '');
+			}
+
 			var element = range.findMarkup(function () {
-				return Style.hasStyle(this, style);
+				return Style.hasStyle(this, style) || (needle && this.className.indexOf(needle) >= 0);
 			}, Aloha.activeEditable.obj);
 
 			if (!element) {
@@ -315,6 +324,14 @@ define(function (require) {
 
 			if (!element) {
 				return defaultValue;
+			}
+
+			// get current value from classname
+			if (this.config[style].className) {
+				match = element.className.match(new RegExp(this.config[style].className.replace('{value}', '(\\d+)')));
+				if (match) {
+					return parseInt(match[1], 10);
+				}
 			}
 
 			// check style set on element
@@ -343,7 +360,7 @@ define(function (require) {
 				styles = {};
 
 			$.each(['fontSize', 'lineHeight', 'letterSpacing', 'wordSpacing'], function (idx, style) {
-				var value = self.getCurrentStyle(style);
+				var value = self.getCurrentValue(style);
 				if (value) {
 					styles[style] = value;
 				}
@@ -363,54 +380,99 @@ define(function (require) {
 
 		/**
 		 * Change the style for the selection / cursor target.
-		 * @param  {Object} attr
+		 * @param  {String} name
+		 * @param  {String} value
 		 */
-		changeStyle: function (attr) {
+		changeStyle: function (name, value) {
+			var self = this;
+
+			// only run the initial cleanup and selection stuff one time when holding down a keyboard
+			// shortcut for resizing (no need to run it more since the selection won't change)
 			if (!keyDownRepeat) {
-				// only run the initial cleanup and selection stuff one time when holding down a keyboard
-				// shortcut for resizing (no need to run it more since the selection won't change)
-				this.initialChangeStyle(attr);
+				// remove previous styles in the selection
+				Dom.elementCleanup(function (el) {
+					Style.removeStyle(el, name);
+				});
+
+				// apply style to the selection
+				var range = Aloha.Selection.getRangeObject(),
+					styleClass = self.getStyleClass(name),
+					rangyRange = range.isCollapsed() ? Range.createExpandedRangeFromCollapsed(range) :
+						Range.rangeObjectToRangyRange(range);
+
+				if (rangyRange) {
+					self.cssClassAppliers[name].applyToRange(rangyRange);
+					Selection.selectTextFromRange(rangyRange);
+				}
+
+				// convert temporary class to inline style (tempfix until Rangy has a proper way to set style attribute)
+				var $classElement = $('.' + styleClass, Aloha.activeEditable.obj);
+				if (!$classElement.css(name, value).removeClass(styleClass).attr('class')) {
+					// $classElement.removeAttr('class');
+					// TODO: the cssClassApplier seems to remove other classes when remove the entire class attribute
+				}
 			} else {
-				$(Aloha.Selection.getRangeObject().getCommonAncestorContainer()).css(attr);
+				$(Aloha.Selection.getRangeObject().getCommonAncestorContainer()).css(name, value);
 			}
 
 			this.debouncedTriggerSmartContentChange();
 		},
 
 		/**
-		 * Change the style for the selection / cursor target and do some
-		 * cleanup and formatting of the selection.
-		 * @param  {Object} attr
+		 * Change the class for the selection / cursor target.
+		 * @param  {String} name
+		 * @param  {String} value
 		 */
-		initialChangeStyle: function (attr) {
-			var self = this;
+		changeClass: function (name, value) {
+			var self = this,
+				template = this.config[name].className,
+				needle = template.replace('{value}', ''),
+				className = template.replace('{value}', value);
 
-			// remove previous styles in the selection
-			Dom.elementCleanup(function (el) {
-				$.each(attr, function (style) {
-					Style.removeStyle(el, style);
+			// only run the initial cleanup and selection stuff one time when holding down a keyboard
+			// shortcut for resizing (no need to run it more since the selection won't change)
+			if (!keyDownRepeat) {
+				// remove previous styles & classes in the selection
+				Dom.elementCleanup(function (el) {
+					self.replaceClass($(el), needle);
+					Style.removeStyle(el, name);
 				});
-			});
 
-			// iterate over each style and apply it to the selection
-			$.each(attr, function (style, value) {
+				// apply classes to the to the selection
 				var range = Aloha.Selection.getRangeObject(),
-					styleClass = self.getStyleClass(style),
+					cssClassApplier = Css.createClassApplier(className),
 					rangyRange = range.isCollapsed() ? Range.createExpandedRangeFromCollapsed(range) :
 						Range.rangeObjectToRangyRange(range);
 
 				if (rangyRange) {
-					self.cssClassAppliers[style].applyToRange(rangyRange);
+					cssClassApplier.applyToRange(rangyRange);
 					Selection.selectTextFromRange(rangyRange);
 				}
+			} else {
+				this.replaceClass($(Aloha.Selection.getRangeObject().getCommonAncestorContainer()), needle, className);
+			}
 
-				// convert temporary class to inline style (tempfix until Rangy has a proper way to set style attribute)
-				var $classElement = $('.' + styleClass, Aloha.activeEditable.obj);
-				if (!$classElement.css(style, value).removeClass(styleClass).attr('class')) {
-					// $classElement.removeAttr('class');
-					// TODO: the cssClassApplier seems to remove other classes when remove the entire class attribute
-				}
-			});
+			this.debouncedTriggerSmartContentChange();
+		},
+
+		/**
+		 * Replace all classes matching the given `needle` with the new class `newClassName`.
+		 * @param  {jQuery.Element} $el
+		 * @param  {String} needle
+		 * @param  {String} [newClassName]
+		 */
+		replaceClass: function ($el, needle, newClassName) {
+			if ($el.attr('class')) {
+				$.each($el.attr('class').split(' '), function (idx, className) {
+					if (className.indexOf(needle) >= 0) {
+						$el.removeClass(className);
+					}
+				});
+			}
+
+			if (newClassName) {
+				$el.addClass(newClassName);
+			}
 		},
 
 		/**
@@ -438,18 +500,28 @@ define(function (require) {
 		},
 
 		/**
+		 * Change style value (or class) for the given `name`.
+		 * @param  {String} name
+		 * @param  {Number} value
+		 */
+		changeValue: function (name, value) {
+			if (value >= this.config[name].min && value <= this.config[name].max) {
+				if (this.config[name].className) {
+					this.changeClass(name, value);
+				} else {
+					this.changeStyle(name, value + this.config[name].unit);
+				}
+
+				this.spinners[name].val(value);
+			}
+		},
+
+		/**
 		 * Change the font-size value of the active selection.
 		 * @param  {Number} value
 		 */
 		changeFontSize: function (value) {
-			if (value >= this.config.fontSize.min && value <= this.config.fontSize.max) {
-				this.changeStyle({
-					fontSize: value + this.config.fontSize.unit,
-					lineHeight: ''
-				});
-				this.spinners.fontSize.val(value);
-				this.spinners.lineHeight.val(this.config.lineHeight.value);
-			}
+			this.changeValue('fontSize', value);
 		},
 
 		/**
@@ -457,12 +529,7 @@ define(function (require) {
 		 * @param  {Number} value
 		 */
 		changeLineHeight: function (value) {
-			if (value >= this.config.lineHeight.min && value <= this.config.lineHeight.max) {
-				this.changeStyle({
-					lineHeight: value + this.config.lineHeight.unit
-				});
-			}
-			this.spinners.lineHeight.val(value);
+			this.changeValue('lineHeight', value);
 		},
 
 		/**
@@ -470,12 +537,7 @@ define(function (require) {
 		 * @param  {Number} value
 		 */
 		changeLetterSpacing: function (value) {
-			if (value >= this.config.letterSpacing.min && value <= this.config.letterSpacing.max) {
-				this.changeStyle({
-					letterSpacing: value + this.config.letterSpacing.unit
-				});
-				this.spinners.letterSpacing.val(value);
-			}
+			this.changeValue('letterSpacing', value);
 		},
 
 		/**
@@ -483,12 +545,7 @@ define(function (require) {
 		 * @param  {Number} value
 		 */
 		changeWordSpacing: function (value) {
-			if (value >= this.config.wordSpacing.min && value <= this.config.wordSpacing.max) {
-				this.changeStyle({
-					wordSpacing: value + this.config.wordSpacing.unit
-				});
-				this.spinners.wordSpacing.val(value);
-			}
+			this.changeValue('wordSpacing', value);
 		},
 
 		/**
@@ -503,7 +560,7 @@ define(function (require) {
 			}
 
 			this.changeFontSize(
-				floatFix(this.getCurrentStyle('fontSize', this.config.fontSize.value) - step)
+				floatFix(this.getCurrentValue('fontSize', this.config.fontSize.value) - step)
 			);
 		},
 
@@ -519,7 +576,7 @@ define(function (require) {
 			}
 
 			this.changeFontSize(
-				floatFix(this.getCurrentStyle('fontSize', this.config.fontSize.value) + step)
+				floatFix(this.getCurrentValue('fontSize', this.config.fontSize.value) + step)
 			);
 		},
 
@@ -535,7 +592,7 @@ define(function (require) {
 			}
 
 			this.changeLineHeight(
-				floatFix(this.getCurrentStyle('lineHeight', this.config.lineHeight.value) - step)
+				floatFix(this.getCurrentValue('lineHeight', this.config.lineHeight.value) - step)
 			);
 		},
 
@@ -551,7 +608,7 @@ define(function (require) {
 			}
 
 			this.changeLineHeight(
-				floatFix(this.getCurrentStyle('lineHeight', this.config.lineHeight.value) + step)
+				floatFix(this.getCurrentValue('lineHeight', this.config.lineHeight.value) + step)
 			);
 		},
 
