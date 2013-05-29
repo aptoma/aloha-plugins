@@ -117,6 +117,8 @@ define(function (require) {
 		 * Create the jQuery UI dialog.
 		 */
 		createDialog: function () {
+			var self = this;
+
 			this.$dialog = this.$element.dialog({
 				title: 'HTML Source Editor',
 				dialogClass: 'aloha-plugin-htmlsource-dialog',
@@ -132,6 +134,9 @@ define(function (require) {
 				resize: $.proxy(this.onResize, this),
 				resizeStop: $.proxy(this.onResized, this),
 				buttons: {
+					'Done': function () {
+						self.$dialog.dialog('close');
+					},
 					'Restore': $.proxy(this.onRestore, this)
 				}
 			});
