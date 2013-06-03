@@ -6,6 +6,13 @@ module.exports = (grunt) ->
 	@initConfig
 		pkg: grunt.file.readJSON("package.json")
 
+		# Release a new version task.
+		# https://github.com/geddski/grunt-release
+		# ----------------------------------------
+		release:
+			options:
+		      npm: false
+
 		# JSHint task.
 		# https://github.com/gruntjs/grunt-contrib-jshint
 		# -----------------------------------------------
@@ -142,6 +149,7 @@ module.exports = (grunt) ->
 	@loadNpmTasks "grunt-contrib-cssmin"
 	@loadNpmTasks "grunt-contrib-watch"
 	@loadNpmTasks "grunt-image-embed"
+	@loadNpmTasks "grunt-release"
 
 	# Register tasks.
 	# ---------------
