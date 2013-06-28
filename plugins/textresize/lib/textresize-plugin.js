@@ -482,6 +482,11 @@ define(function (require) {
 		triggerSmartContentChange: function () {
 			var snapshot = null;
 
+			// Since this function is delayed with 500ms the editor might have been deactivated while waiting
+			if (!Aloha.activeEditable) {
+				return;
+			}
+
 			function getSnapshotContent() {
 				if (null === snapshot) {
 					snapshot = Aloha.activeEditable.getSnapshotContent();
