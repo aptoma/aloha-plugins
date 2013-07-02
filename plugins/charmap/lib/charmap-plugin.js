@@ -174,6 +174,8 @@ define(function (require) {
 				range.endContainer = range.startContainer;
 				range.endOffset = ++range.startOffset;
 				range.select();
+
+				this.$dialog.dialog('close');
 			}
 		}
 	});
