@@ -176,7 +176,7 @@ define(function (require) {
 			increaseFontSize: 'ctrl+right ctrl+shift+right',
 			decreaseLineHeight: 'ctrl+up ctrl+shift+up',
 			increaseLineHeight: 'ctrl+down ctrl+shift+down',
-			autofitFontSize: 'alt+space'
+			autofitFontSize: 'ctrl+space'
 		},
 
 		/**
@@ -244,6 +244,13 @@ define(function (require) {
 						filterPubSubEvents(false);
 						self.triggerSmartContentChange();
 					});
+				});
+
+				params.editable.obj.bind('click.aloha.textresize', function (e) {
+					if (e.altKey) {
+						self.autofitFontSize();
+						return false;	
+					}
 				});
 			});
 
